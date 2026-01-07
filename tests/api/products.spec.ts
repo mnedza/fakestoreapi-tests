@@ -27,3 +27,24 @@ test("GET /products/1 - returns product with correct structure", async ({
   expect(product).toHaveProperty("price");
   expect(product).toHaveProperty("category");
 });
+
+test("POST /products creates new product", async ({ request }) => {
+  const newProduct = {
+    title: "My product",
+    price: 49.99,
+    description: "Product from API test",
+    image: "https://i.pravatar.cc",
+    category: "something",
+  };
+
+  const response = await request.post("https://fakestoreapi.com/products", {
+    data: newProduct,
+  });
+  expect(response.status()).toBe(201);
+  const createdProduct = await response.json();
+
+  expect(createdProduct).toHaveProperty("id");
+  expect(createdProduct.title).toBe(newProduct.title);
+  expect(createdProduct.price).toBe(newProduct.price);
+  expect(createdProduct.category).toBe(newProduct.category);
+});
