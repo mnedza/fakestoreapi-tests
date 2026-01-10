@@ -48,3 +48,29 @@ test("POST /products creates new product", async ({ request }) => {
   expect(createdProduct.price).toBe(newProduct.price);
   expect(createdProduct.category).toBe(newProduct.category);
 });
+
+test("PUT /products updates product data", async ({ request }) => {
+  const productId = 1;
+
+  const updatedProduct = {
+    title: "Updated product title",
+    price: 79.99,
+    description: "Updated description from test",
+    image: "https://i.pravatar.cc",
+    category: "electronics",
+  };
+
+  const response = await request.put(
+    `https://fakestoreapi.com/products/${productId}`,
+    {
+      data: updatedProduct,
+    }
+  );
+
+  expect(response.status()).toBe(200);
+  const product = await response.json();
+  expect(product.id).toBe(productId);
+  expect(product.title).toBe(updatedProduct.title);
+  expect(product.price).toBe(updatedProduct.price);
+  expect(product.category).toBe(updatedProduct.category);
+});
