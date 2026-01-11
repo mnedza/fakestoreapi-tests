@@ -74,3 +74,31 @@ test("PUT /products updates product data", async ({ request }) => {
   expect(product.price).toBe(updatedProduct.price);
   expect(product.category).toBe(updatedProduct.category);
 });
+
+test("DELETE /products deletes product", async ({ request }) => {
+  const productId = 1;
+
+  const response = await request.delete(
+    `https://fakestoreapi.com/products/${productId}`
+  );
+
+  expect(response.status()).toBe(200);
+  const deletedProduct = await response.json();
+  expect(deletedProduct.id).toBe(productId);
+
+  // because it is fake store api - below code would be false because in fake store does not have real state of an item. so deleted item in fact isn't deleted
+  // but in the test I wrote we can see that status of response is 200 so item theoretically should be deleted
+
+  // await request.delete(`/products/${id}`);
+  // const getResponse = await request.get(`/products/${id}`);
+  // expect(getResponse.status()).toBe(404);
+});
+
+test("DELETE /products with invalid id returns error", async ({ request }) => {
+  const response = await request.delete(
+    "https://fakestoreapi.com/products/99999"
+  );
+
+  expect(response.status()).toBe(200);
+  // that is what clarification of what I wrote in test "DELETE /products deletes product" - even not existing product is deleted.
+});
